@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   sensors_plus: ^6.0.1
-  wakelock_plus: ^1.2.8
+  wakelock_plus: 1.2.8
 
 dev_dependencies:
   flutter_lints: ^4.0.0
