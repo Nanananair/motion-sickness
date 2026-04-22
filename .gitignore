@@ -6,7 +6,6 @@
 .pub-cache/
 .pub/
 build/
-pubspec.lock
 
 # IDEs
 .idea/
@@ -15,11 +14,9 @@ pubspec.lock
 *.ipr
 *.iws
 
-# Android (generated)
+# Android (generated / local)
 **/android/.gradle/
 **/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties

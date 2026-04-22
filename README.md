@@ -18,15 +18,20 @@ A commercial app called **Kinestop** does the same thing but is paywalled. This 
 
 ## First-time setup
 
-Flutter SDK required locally (>= 3.19). From the repo root:
+Flutter SDK required locally (Flutter 3.24.x, Dart 3.5+). From the repo root:
 
 ```
-flutter create --platforms=android --org com.kinetosis .
 flutter pub get
 flutter run
 ```
 
-`flutter create .` in an existing directory is additive — it only generates the Android platform files under `android/`. It will **not** overwrite `pubspec.yaml` or anything under `lib/`.
+The Android platform scaffolding in `android/` is already checked in (generated with `flutter create --platforms=android --org com.kinetosis --project-name kinetosis_horizon .`). JDK 17 is recommended — Gradle 8.3 in the wrapper does not support JDK 21.
+
+To build an installable debug APK:
+
+```
+flutter build apk --debug
+```
 
 ## Project layout
 
