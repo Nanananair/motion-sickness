@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'services/app_lifecycle_coordinator.dart';
 import 'services/sensor_service.dart';
 import 'widgets/horizon_painter.dart';
 
@@ -14,19 +14,48 @@ class HorizonPage extends StatefulWidget {
 class _HorizonPageState extends State<HorizonPage> {
   final SensorService _sensors = SensorService();
   final _dots = generateDotSeeds();
+  late final AppLifecycleCoordinator _coordinator =
+      AppLifecycleCoordinator(sensors: _sensors);
 
   @override
   void initState() {
     super.initState();
-    WakelockPlus.enable();
-    _sensors.start();
+    _coordinator.attach();
+    _coordinator.lastError.addListener(_onError);
   }
 
   @override
   void dispose() {
+    _coordinator.lastError.removeListener(_onError);
+    _coordinator.detach();
     _sensors.dispose();
-    WakelockPlus.disable();
     super.dispose();
+  }
+
+  void _onError() {
+    final msg = _coordinator.lastError.value;
+    if (msg == null || !mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), duration: const Duration(seconds: 3)),
+    );
+  }
+
+  void _onCalibrate() {
+    _sensors.calibrate();
+    _coordinator.pushCalibrationToOverlay();
+  }
+
+  void _onResetCalibration() {
+    _sensors.resetCalibration();
+    _coordinator.pushCalibrationToOverlay();
+  }
+
+  Future<void> _toggleOverlay() async {
+    if (_coordinator.overlayActive.value) {
+      await _coordinator.stopOverlay();
+    } else {
+      await _coordinator.startOverlay();
+    }
   }
 
   @override
@@ -49,14 +78,22 @@ class _HorizonPageState extends State<HorizonPage> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                ValueListenableBuilder<bool>(
+                  valueListenable: _coordinator.overlayActive,
+                  builder: (context, active, _) => _PillButton(
+                    label: active ? 'Overlay off' : 'Overlay on',
+                    onPressed: _toggleOverlay,
+                  ),
+                ),
+                const SizedBox(width: 8),
                 _PillButton(
                   label: 'Reset',
-                  onPressed: _sensors.resetCalibration,
+                  onPressed: _onResetCalibration,
                 ),
                 const SizedBox(width: 8),
                 _PillButton(
                   label: 'Calibrate',
-                  onPressed: _sensors.calibrate,
+                  onPressed: _onCalibrate,
                 ),
               ],
             ),

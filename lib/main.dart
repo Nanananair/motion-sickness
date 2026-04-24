@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'horizon_page.dart';
+// Referenced so the @pragma('vm:entry-point') `overlayMain` is retained by
+// the tree-shaker and reachable when flutter_overlay_window spawns its
+// secondary isolate.
+// ignore: unused_import
+import 'overlay/overlay_entrypoint.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
