@@ -212,11 +212,11 @@ void horizonForegroundTaskCallback() {
 
 class _HorizonTaskHandler extends TaskHandler {
   @override
-  void onStart(DateTime timestamp, TaskStarter starter) {}
+  Future<void> onStart(DateTime timestamp, TaskStarter starter) async {}
 
   @override
   void onRepeatEvent(DateTime timestamp) {}
 
   @override
-  Future<void> onDestroy(DateTime timestamp) async {}
+  Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {}
 }
