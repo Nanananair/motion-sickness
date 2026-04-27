@@ -22,13 +22,18 @@ class SensorService {
   double _rollOffset = 0;
   double _pitchOffset = 0;
 
+  Duration _samplingPeriod = SensorInterval.gameInterval;
+
+  bool get isRunning => _accelSub != null;
+
   void start() {
+    if (isRunning) return;
     _accelSub = accelerometerEventStream(
-      samplingPeriod: SensorInterval.gameInterval,
+      samplingPeriod: _samplingPeriod,
     ).listen(_onAccelerometer);
 
     _userAccelSub = userAccelerometerEventStream(
-      samplingPeriod: SensorInterval.gameInterval,
+      samplingPeriod: _samplingPeriod,
     ).listen(_onUserAccelerometer);
   }
 
@@ -38,6 +43,27 @@ class SensorService {
     _accelSub = null;
     _userAccelSub = null;
   }
+
+  /// Re-subscribes the accelerometer streams at [period]. Safe to call at any
+  /// time — a no-op if the period already matches.
+  Future<void> setSamplingRate(Duration period) async {
+    if (_samplingPeriod == period) return;
+    _samplingPeriod = period;
+    if (!isRunning) return;
+    await stop();
+    start();
+  }
+
+  void applyCalibration({
+    required double rollOffset,
+    required double pitchOffset,
+  }) {
+    _rollOffset = rollOffset;
+    _pitchOffset = pitchOffset;
+  }
+
+  double get rollOffset => _rollOffset;
+  double get pitchOffset => _pitchOffset;
 
   void dispose() {
     stop();
