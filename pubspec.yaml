@@ -1,7 +1,7 @@
 name: kinetosis_horizon
-description: A free, simple horizon simulator that helps reduce motion sickness by syncing what your eyes see with what your inner ear feels.
+description: A free motion-sickness cue that drifts over your other apps, syncing what your eyes see with what your inner ear feels.
 publish_to: "none"
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -12,8 +12,6 @@ dependencies:
     sdk: flutter
   sensors_plus: ^6.0.1
   wakelock_plus: 1.2.8
-  flutter_overlay_window: ^0.4.5
-  flutter_foreground_task: ^8.17.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0
