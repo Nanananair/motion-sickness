@@ -2,7 +2,8 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main]
+    # Feature branches build too: the overlay can only be judged on a real device.
+    branches: [main, "claude/**"]
   pull_request:
     branches: [main]
   workflow_dispatch:
